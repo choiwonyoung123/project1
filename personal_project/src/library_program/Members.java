@@ -9,12 +9,12 @@ public class Members {
 	private String memberId;
 	private String memberPw;
 	private String email;
-	private Date birthDate;
-	private Date joinDate;
+	private String birthDate;
+	private String joinDate;
 	
 	
-	public Members(int memberNo, String name, String memberId, String memberPw, String email, Date birthDate,
-			Date joinDate) {
+	public Members(int memberNo, String name, String memberId, String memberPw, String email, String birthDate,
+			String joinDate) {
 		super();
 		this.memberNo = memberNo;
 		this.name = name;
@@ -65,16 +65,16 @@ public class Members {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Date getBirthDate() {
+	public String getBirthDate() {
 		return birthDate;
 	}
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
-	public Date getJoinDate() {
+	public String getJoinDate() {
 		return joinDate;
 	}
-	public void setJoinDate(Date joinDate) {
+	public void setJoinDate(String joinDate) {
 		this.joinDate = joinDate;
 	}
 }

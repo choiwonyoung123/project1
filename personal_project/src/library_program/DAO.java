@@ -11,7 +11,7 @@ public class DAO {
 			try {
 				Class.forName("oracle.jdbc.OracleDriver");
 				//데이터베이스 URL, 아이디, 비밀번호 입력 
-				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "yedam", "1234");
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "c##yedam", "1234");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
