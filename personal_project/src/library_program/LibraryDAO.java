@@ -5,17 +5,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryDAO {
-	// 필드
 	Connection conn;
 	PreparedStatement psmt;
 	ResultSet rs;
 	String sql;
-	SimpleDateFormat sdf = new SimpleDateFormat("yy/mm/dd");
 
 	// 기능 닫기
 	void disconn() {
@@ -233,14 +230,10 @@ public class LibraryDAO {
 		}
 		return false;
 	}
-
 	// 종료
-	public boolean off(boolean offCheck) {
-		offCheck = false;
-		return offCheck;
-	}
+	
 
-	// ==== 사용자 전용 기능 ====
+	// ========= 사용자 전용 기능 =========
 	// ==== 도서검색 ==== 완성
 	public String searchBook(int searchOption1, String searchData, int searchOption2) {
 		conn = DAO.getConn();
@@ -560,7 +553,7 @@ public class LibraryDAO {
 	// ==== 회원탈퇴 기능 ==== 완성
 	public boolean unjoin(String unjoinMemberId, String unjoinMemberPw) {
 		conn = DAO.getConn();
-		sql = "delete members where member_id = ? and member_pw";
+		sql = "delete members where member_id = ? and member_pw = ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, unjoinMemberId);

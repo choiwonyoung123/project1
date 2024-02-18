@@ -215,7 +215,7 @@ public class LibraryApp {
 					// 회원삭제
 					case 5:
 						System.out.println("[회원삭제]");
-						System.out.print("삭제할 회원 아이디:");
+						System.out.print("삭제할 아이디:");
 						String deleteMemberName = scn.nextLine();
 						if(ldao.deleteMember(deleteMemberName)) {
 							System.out.println("회원삭제를 완료했습니다.");
@@ -232,6 +232,10 @@ public class LibraryApp {
 					case 6:
 						System.out.println("프로그램을 종료합니다.");
 						return;
+					default:
+						System.out.println("번호가 올바르지 않습니다.");
+						System.out.println("");
+						System.out.println("");
 					}		
 				}
 			}
@@ -261,7 +265,7 @@ public class LibraryApp {
 						System.out.print("검색조건(1~9) 선택:");
 						int searchOption1 = scn.nextInt();
 						scn.nextLine();
-						System.out.print("검색할 값 입력:");
+						System.out.print("검색할 값:");
 						String searchData = scn.nextLine(); 
 						System.out.print("정렬조건(1~2) 선택:");
 						int searchOption2 = scn.nextInt();
@@ -281,9 +285,9 @@ public class LibraryApp {
 					// 도서대출
 					case 2:
 						System.out.println("[도서대출]");
-						System.out.print("아이디 입력:");
+						System.out.print("아이디:");
 						String myId = scn.nextLine();
-						System.out.print("대출할 도서명 입력:");
+						System.out.print("대출 도서명:");
 						String checkBookName = scn.nextLine();
 						if(ldao.check(checkBookName, myId)) {
 							System.out.println("도서대출을 완료했습니다.");
@@ -299,9 +303,9 @@ public class LibraryApp {
 					// 도서반납
 					case 3:
 						System.out.println("[도서반납]");
-						System.out.print("아이디 입력:");
+						System.out.print("아이디:");
 						String myId2 = scn.nextLine();
-						System.out.print("반납할 도서명 입력:");
+						System.out.print("반납 도서명:");
 						String uncheckBookName = scn.nextLine();
 						if(ldao.uncheck(uncheckBookName, myId2)) {
 							System.out.println("도서반납을 완료했습니다.");
@@ -317,7 +321,7 @@ public class LibraryApp {
 					// 대출목록조회
 					case 4:
 						System.out.println("[대출목록]");
-						System.out.print("조회할 아이디 입력:");
+						System.out.print("아이디:");
 						String myId3 = scn.nextLine();
 						System.out.println(ldao.checkLists(myId3));
 						System.out.println("");
@@ -325,10 +329,10 @@ public class LibraryApp {
 						break;
 					// 내정보조회
 					case 5:
-						System.out.println("[내정보]");
-						System.out.print("1.아이디 입력:");
+						System.out.println("[내정보조회]");
+						System.out.print("1.아이디:");
 						String myId4 = scn.nextLine();
-						System.out.print("2.비밀번호 입력:");
+						System.out.print("2.비밀번호:");
 						String myPw = scn.nextLine();
 						System.out.println(ldao.searchMyInfo(myId4, myPw));
 						System.out.println("");
@@ -337,7 +341,7 @@ public class LibraryApp {
 					// 내정보수정
 					case 6:
 						System.out.println("[내정보수정]");
-						System.out.print("본인 아이디 입력:");
+						System.out.print("아이디:");
 						String u_id2 = scn.nextLine();
 						System.out.print("1.이름 수정:");
 						String updateName = scn.nextLine();
@@ -368,9 +372,10 @@ public class LibraryApp {
 						break;
 					// 회원탈퇴
 					case 7:
-						System.out.print("탈퇴할 아이디 입력:");
+						System.out.println("[회원탈퇴]");
+						System.out.print("1.아이디:");
 						String unjoinMemberId = scn.nextLine();
-						System.out.print("탈퇴할 비밀번호 입력:");
+						System.out.print("2.비밀번호:");
 						String unjoinMemberPw = scn.nextLine();
 						if(ldao.unjoin(unjoinMemberId, unjoinMemberPw)) {
 							System.out.println("회원탈퇴를 완료했습니다.");
@@ -387,6 +392,10 @@ public class LibraryApp {
 					case 8:
 						System.out.println("프로그램을 종료합니다.");
 						return;
+					default:
+						System.out.println("번호가 올바르지 않습니다.");
+						System.out.println("");
+						System.out.println("");
 					}	
 				}
 			} //사용자계정				
