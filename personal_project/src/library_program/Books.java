@@ -1,7 +1,7 @@
 //도서 클래스
 package library_program;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Books {
 	private int bookNo; //등록번호
@@ -16,7 +16,7 @@ public class Books {
 	private String checkState; //대출상태
 	private String bookLocation;
 	private String bookOwn;
-	
+	SimpleDateFormat sdf = new SimpleDateFormat("yy/mm/dd");
 	
 	
 	
@@ -68,6 +68,11 @@ public class Books {
 		super();
 	}
 
+	public String toString() {
+		return bookNo + " - " + bookName + " - " + groupNo + " - " + groupName + " " + writer + " - " + sdf.format(bookLocation) + " - " + publication + " - " + mediaType + " - " + useObject + " - " + checkState + " - " + bookLocation + " - " + bookOwn;
+	}
+	
+	
 
 	public int getBookNo() {
 		return bookNo;
