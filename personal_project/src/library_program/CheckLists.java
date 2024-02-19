@@ -5,11 +5,10 @@ import java.util.Date;
 
 public class CheckLists {
 	private int checkNo;
-	private int memberNo;
+	private String memberId;
 	private String book_name;
 	private Date checkDate;
 	private Date returnDate;
-	private Date remainDate;
 	
 	
 	public int getCheckNo() {
@@ -18,11 +17,11 @@ public class CheckLists {
 	public void setCheckNo(int checkNo) {
 		this.checkNo = checkNo;
 	}
-	public int getMemberNo() {
-		return memberNo;
+	public String getMemberNo() {
+		return memberId;
 	}
-	public void setMemberNo(int memberNo) {
-		this.memberNo = memberNo;
+	public void setMemberNo(String memberId) {
+		this.memberId = memberId;
 	}
 	public String getBook_name() {
 		return book_name;
@@ -41,11 +40,5 @@ public class CheckLists {
 	}
 	public void setReturnDate(Date returnDate) {
 		this.returnDate = returnDate;
-	}
-	public Date getRemainDate() {
-		return remainDate;
-	}
-	public void setRemainDate(Date remainDate) {
-		this.remainDate = remainDate;
 	}
 }
