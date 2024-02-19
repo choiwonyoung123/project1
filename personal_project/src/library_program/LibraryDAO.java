@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class LibraryDAO {
 	Connection conn;
 	PreparedStatement psmt;
@@ -234,8 +235,39 @@ public class LibraryDAO {
 	
 
 	// ========= 사용자 전용 기능 =========
+	
+	
+	// ==== 도서목록 ==== 완성
+	public List<Books> bookLists(int page){
+		conn = DAO.getConn();
+		List<Books> bookList = new ArrayList<>();
+		sql = "select * from books order by book_no";
+		try {
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			while(rs.next()) {
+				Books books = new Books();
+				books.setBookNo(rs.getInt("book_no"));
+				books.setBookName(rs.getString("book_name"));
+				books.setGroupNo(rs.getString("group_no"));
+				books.setWriter(rs.getString("writer"));
+				books.setPublishDate(rs.getString("publish_date"));
+				books.setPublication(rs.getString("publication"));
+				books.setMediaType(rs.getString("media_type"));
+				books.setUseObject(rs.getString("use_object"));
+				books.setCheckState(rs.getString("check_state"));
+				bookList.add(books);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
+		return bookList;
+	}
+	
 	// ==== 도서검색 ==== 완성
-	public String searchBook(int searchOption1, String searchData, int searchOption2) {
+	public List<Books> searchBook(int searchOption1, String searchData, int searchOption2) {
 		conn = DAO.getConn();
 		String searchBookList;
 		List<Books> bookList = new ArrayList<>();
@@ -243,31 +275,49 @@ public class LibraryDAO {
 		// 도서명
 		case 1:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.book_name, ?) > 0 "
-						+ " order by b.book_name asc ";
+				sql = "select book_no, book_name, group_no, group_name, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(book_name, ?) > 0 "
+						+ " order by book_no asc, book_name asc";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.book_name, ?) > 0 "
-						+ " order by b.book_name desc ";
+				sql = "select book_no, book_name, group_no, group_name, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(book_name, ?) > 0 "
+						+ " order by book_no asc, book_name desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -277,31 +327,49 @@ public class LibraryDAO {
 		// 분류번호
 		case 2:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(g.group_no, ?) > 0 "
-						+ " order by g.group_no asc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(group_no, ?) > 0 "
+						+ " order by book_no asc, group_no asc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(g.group_no, ?) > 0 "
-						+ " order by g.group_no desc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(group_no, ?) > 0 "
+						+ " order by book_no asc, group_no desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -311,31 +379,49 @@ public class LibraryDAO {
 		// 저자
 		case 3:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.writer, ?) > 0 "
-						+ " order by b.writer asc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(writer, ?) > 0 "
+						+ " order by book_no asc, writer asc";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.writer, ?) > 0 "
-						+ " order by b.writer desc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(writer, ?) > 0 "
+						+ " order by book_no asc, writer desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -344,32 +430,50 @@ public class LibraryDAO {
 			break;
 		// 출판년도
 		case 4:
-			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where b.publish_date = ? " 
-						+ " order by b.publish_date asc ";
+			if (searchOption2 == 1) { // 이후날짜
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where publish_date > TO_DATE(?, 'yy/mm/dd') "
+						+ " order by book_no asc, writer asc";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where b.publish_date = ? " 
-						+ " order by b.publish_date desc ";
+			} else { // 이전날짜
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where publish_date < TO_DATE(?, 'yy/mm/dd') "
+						+ " order by book_no asc, writer desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -379,31 +483,49 @@ public class LibraryDAO {
 		// 출판사
 		case 5:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.publication, ?) > 0 "
-						+ " order by b.publication asc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(publication, ?) > 0 "
+						+ " order by book_no asc, publication asc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.publication, ?) > 0 "
-						+ " order by b.publication desc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(publication, ?) > 0 "
+						+ " order by book_no asc, publication desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -413,31 +535,49 @@ public class LibraryDAO {
 		// 매체형태
 		case 6:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.media_type, ?) > 0 "
-						+ " order by b.media_type asc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(media_type, ?) > 0 "
+						+ " order by book_no asc, media_type asc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.media_type, ?) > 0 "
-						+ " order by b.media_type desc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(media_type, ?) > 0 "
+						+ " order by book_no asc, media_type desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -447,31 +587,49 @@ public class LibraryDAO {
 		// 이용대상
 		case 7:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.use_object, ?) > 0 "
-						+ " order by b.use_object asc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(use_object, ?) > 0 "
+						+ " order by book_no asc, use_object asc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.use_object, ?) > 0 "
-						+ " order by b.use_object desc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(use_object, ?) > 0 "
+						+ " order by book_no asc, use_object desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -481,65 +639,49 @@ public class LibraryDAO {
 		// 대출유무
 		case 8:
 			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.check_state, ?) > 0 "
-						+ " order by b.check_state asc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(check_state, ?) > 0 "
+						+ " order by book_no asc, check_state asc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(b.check_state, ?) > 0 "
-						+ " order by b.check_state desc ";
+				sql = "select book_no, book_name, group_no, writer, publish_date, publication, media_type, use_object, check_state"
+						+ " from books where instr(check_state, ?) > 0 "
+						+ " order by book_no asc, check_state desc ";
 				try {
 					psmt = conn.prepareStatement(sql);
 					psmt.setString(1, searchData);
 					rs = psmt.executeQuery();
 					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			break;
-		// 소장위치
-		case 9:
-			if (searchOption2 == 1) { // 오름차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(g.book_location, ?) > 0 "
-						+ " order by g.book_location asc ";
-				try {
-					psmt = conn.prepareStatement(sql);
-					psmt.setString(1, searchData);
-					rs = psmt.executeQuery();
-					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			} else { // 내림차순
-				sql = "select b.book_name, g.group_no, g.group_name, b.writer, b.publish_date, b.publication, b.media_type, b.use_object, b.check_state, g.book_location, g.book_own "
-						+ " from books b join book_groups g on (b.group_no = g.group_no) " + " where instr(g.book_location, ?) > 0 " 
-						+ " order by g.book_location desc ";
-				try {
-					psmt = conn.prepareStatement(sql);
-					psmt.setString(1, searchData);
-					rs = psmt.executeQuery();
-					while (rs.next()) {
-						searchBookList = "도서명:" + rs.getString("book_name") + " | " + "분류번호:" + rs.getString("group_no") + " | " + "분류명:" + rs.getString("group_name") + " | " + "저자:" + rs.getString("writer") + " | " + "출판년도:" + rs.getString("publish_date") + " | " + "출판사:" + rs.getString("publication") + " | " + "매체형태:" + rs.getString("media_type") + " | " + "이용대상:" + rs.getString("use_object") + " | " + "대출상태:" + rs.getString("check_state") + " | " + "소장위치:" + rs.getString("book_location") + " | " + "소장처:" + rs.getString("book_own") + "\n";
-						return searchBookList;
+						Books books = new Books();
+						books.setBookNo(rs.getInt("book_no"));
+						books.setBookName(rs.getString("book_name"));
+						books.setGroupNo(rs.getString("group_no"));
+						books.setWriter(rs.getString("writer"));
+						books.setPublishDate(rs.getString("publish_date"));
+						books.setPublication(rs.getString("publication"));
+						books.setMediaType(rs.getString("media_type"));
+						books.setUseObject(rs.getString("use_object"));
+						books.setCheckState(rs.getString("check_state"));
+						bookList.add(books);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -547,7 +689,7 @@ public class LibraryDAO {
 			}
 			break;
 		}
-		return null;
+		return bookList;
 	}
 
 	// ==== 회원탈퇴 기능 ==== 완성
@@ -640,22 +782,29 @@ public class LibraryDAO {
 		return false;
 	}
 
-	// 대출목록조회
-	public String checkLists(String myId) {
+	// ==== 대출목록조회 기능 ==== 완성
+	public List<CheckLists> checkLists(String myId) {
 		conn = DAO.getConn();
-		sql = "select member_id, book_name, check_date, return_date from checklists where member_id = ?";
+		List<CheckLists> bookList = new ArrayList<>();
+		sql = "select book_name, check_date, return_date from checklists where member_id = ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, myId);
 			rs = psmt.executeQuery();
 			while(rs.next()) {
-				String myCheckLists = "아이디:" + rs.getString("member_id") + " | " + "도서명:" + rs.getString("book_name") + " | " + "대출날짜:" + rs.getString("check_date") + " | " + "반납날짜:" + rs.getString("return_date");
-				return myCheckLists;
+				CheckLists myCheckLists = new CheckLists();
+				myCheckLists.setBookName(rs.getString("book_name"));
+				myCheckLists.setCheckDate(rs.getString("check_date"));
+				myCheckLists.setReturnDate(rs.getString("return_date"));
+				bookList.add(myCheckLists);
+				//return bookList;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			disconn();
 		}
-		return null;
+		return bookList;
 	}
 
 	

@@ -2,6 +2,7 @@
 package library_program;
 
 
+import java.util.List;
 import java.util.Scanner;
 
 public class LibraryApp {
@@ -17,9 +18,9 @@ public class LibraryApp {
 			boolean run2 = true;
 			// 로그인 or 회원가입
 			while(run2) { 
-				System.out.println("============== [대구도서관] ==============");
-				System.out.println("     1.로그인     2.회원가입     3.종료      ");
-				System.out.println("=======================================");
+				System.out.println(" ============= [YD도서관] ============= ");
+				System.out.println("     1.로그인    2.회원가입     3.종료     ");
+				System.out.println(" ===================================== ");
 				System.out.print("메뉴(1~3) 선택:");
 				int log_join_check = scn.nextInt();
 				scn.nextLine();
@@ -93,10 +94,10 @@ public class LibraryApp {
 			if(account == 1) {
 				boolean run3 = true;
 				while(run3) {
-					System.out.println("========== [관리자 메뉴] ==========");
+					System.out.println(" ========== [관리자 메뉴] ==========");
 					System.out.println("   1.도서등록  2.도서수정  3.도서삭제   ");
 					System.out.println("   4.회원등록  5.회원삭제  6.종료      ");
-					System.out.println("================================");
+					System.out.println(" ================================");
 					System.out.print("메뉴(1~6) 선택:");
 					int manager_menu_check = scn.nextInt();
 					scn.nextLine();
@@ -243,47 +244,84 @@ public class LibraryApp {
 			else if(account == 2) {
 				boolean run4 = true;
 				while(run4) {
-					System.out.println("========== [사용자 메뉴] ==========");
-					System.out.println("   1.도서검색  2.도서대출  3.도서반납   ");
-					System.out.println("   4.대출목록  5.내정보조회 6.내정보수정 ");
-					System.out.println("   7.회원탈퇴  8.종료               ");
-					System.out.println("================================");
+					System.out.println(" ========== [사용자 메뉴] ==========");
+					System.out.println("   1.도서목록  2.도서검색  3.도서대출   ");
+					System.out.println("   4.도서반납  5.대출목록  6.내정보조회 ");
+					System.out.println("   7.내정보수정 8.회원탈퇴  9.종료     ");
+					System.out.println(" ================================");
 					System.out.print("메뉴(1~7) 선택:");
 					int user_menu_check = scn.nextInt();
 					scn.nextLine();
 					switch(user_menu_check) {
-					// 도서검색
+					// 도서목록
 					case 1:
-						System.out.println("[도서검색]");
-						System.out.println("---------- [검색조건] ----------");
-						System.out.println("  1.도서명   2.분류번호  3.저자     ");
-						System.out.println("  4.출판년도  5.출판사   6.매체형태  ");
-						System.out.println("  7.이용대상  8.대출유무  9.도서위치  ");
-						System.out.println("---------- [정렬조건] ----------");
-						System.out.println("      1.오름차순   2.내림차순      ");
-						System.out.println("------------------------------");
-						System.out.print("검색조건(1~9) 선택:");
-						int searchOption1 = scn.nextInt();
-						scn.nextLine();
-						System.out.print("검색할 값:");
-						String searchData = scn.nextLine(); 
-						System.out.print("정렬조건(1~2) 선택:");
-						int searchOption2 = scn.nextInt();
-						scn.nextLine();
-						System.out.println("[검색결과]");
-						if(ldao.searchBook(searchOption1, searchData, searchOption2) != null) {							
-							System.out.println(ldao.searchBook(searchOption1, searchData, searchOption2));
+						System.out.println("도서목록");
+						int page = 1;
+						ldao.bookLists(page);
+						List<Books> bookList = ldao.bookLists(page);
+						if(bookList != null) {							
+							for(Books searchLists : bookList) {
+								System.out.println(searchLists.getBookNo() + " | " + "도서명 :" + searchLists.getBookName() + " | " + "분류번호 :" + searchLists.getGroupNo() + " | " + "저자 :" + searchLists.getWriter() + " | " + "출판년도 :" + searchLists.getPublishDate() + " | " + "출판사 :" + searchLists.getPublication() + " | " + "매체형태 :" + searchLists.getMediaType() + " | " + "이용대상 :" + searchLists.getUseObject() + " | " + "대출상태 :" + searchLists.getCheckState());	
+							}
 							System.out.println("");
 							System.out.println("");
 						}
 						else {
 							System.out.println("검색결과가 없습니다.");
-							System.out.println("");
-							System.out.println("");
+						}
+						break;
+					// 도서검색
+					case 2:
+						System.out.println("[도서검색]");
+						System.out.println(" ---------- [검색조건] ----------");
+						System.out.println("  1.도서명   2.분류번호  3.저자     ");
+						System.out.println("  4.출판년도  5.출판사   6.매체형태  ");
+						System.out.println("  7.이용대상  8.대출유무            ");
+						System.out.println(" ------------------------------");
+						System.out.print("검색조건(1~8) 선택:");
+						int searchOption1 = scn.nextInt();
+						scn.nextLine();
+						if(searchOption1 != 4) {							
+							System.out.print("검색할 값:");
+							String searchData = scn.nextLine(); 
+							System.out.print("정렬조건(1:오름차순, 2:내림차순) 선택:");
+							int searchOption2 = scn.nextInt();
+							scn.nextLine();
+							List<Books> bookList2 = ldao.searchBook(searchOption1, searchData, searchOption2);
+							System.out.println("[검색결과]");
+							if(bookList2 != null) {							
+								for(Books searchBookLists : bookList2) {
+									System.out.println(searchBookLists.getBookNo() + " | " + "도서명 :" + searchBookLists.getBookName() + " | " + "분류번호 :" + searchBookLists.getGroupNo() + " | " + "저자 :" + searchBookLists.getWriter() + " | " + "출판년도 :" + searchBookLists.getPublishDate() + " | " + "출판사 :" + searchBookLists.getPublication() + " | " + "매체형태 :" + searchBookLists.getMediaType() + " | " + "이용대상 :" + searchBookLists.getUseObject() + " | " + "대출상태 :" + searchBookLists.getCheckState());
+								}						
+								System.out.println("");
+								System.out.println("");
+							}
+							else {
+								System.out.println("검색결과가 없습니다.");
+							}
+						}
+						else {
+							System.out.print("검색할 값(yy/mm/dd):");
+							String searchData = scn.nextLine();
+							System.out.print("정렬조건(1:이후날짜, 2:이전날짜) 선택:");
+							int searchOption2 = scn.nextInt();
+							scn.nextLine();
+							List<Books> bookList2 = ldao.searchBook(searchOption1, searchData, searchOption2);
+							System.out.println("[검색결과]");
+							if(bookList2 != null) {							
+								for(Books searchBookLists : bookList2) {
+									System.out.println(searchBookLists.getBookNo() + " | " + "도서명 :" + searchBookLists.getBookName() + " | " + "분류번호 :" + searchBookLists.getGroupNo() + " | " + "저자 :" + searchBookLists.getWriter() + " | " + "출판년도 :" + searchBookLists.getPublishDate() + " | " + "출판사 :" + searchBookLists.getPublication() + " | " + "매체형태 :" + searchBookLists.getMediaType() + " | " + "이용대상 :" + searchBookLists.getUseObject() + " | " + "대출상태 :" + searchBookLists.getCheckState());
+								}						
+								System.out.println("");
+								System.out.println("");
+							}
+							else {
+								System.out.println("검색결과가 없습니다.");
+							}
 						}
 						break;
 					// 도서대출
-					case 2:
+					case 3:
 						System.out.println("[도서대출]");
 						System.out.print("아이디:");
 						String myId = scn.nextLine();
@@ -301,7 +339,7 @@ public class LibraryApp {
 						}
 						break;
 					// 도서반납
-					case 3:
+					case 4:
 						System.out.println("[도서반납]");
 						System.out.print("아이디:");
 						String myId2 = scn.nextLine();
@@ -319,16 +357,20 @@ public class LibraryApp {
 						}
 						break;
 					// 대출목록조회
-					case 4:
+					case 5:
 						System.out.println("[대출목록]");
 						System.out.print("아이디:");
 						String myId3 = scn.nextLine();
-						System.out.println(ldao.checkLists(myId3));
+						List<CheckLists> bookList3 = ldao.checkLists(myId3);
+						for(CheckLists checkLists : bookList3) {
+							System.out.println("도서명 :" + checkLists.getBookName() + " | " + "대출날짜 :" + checkLists.getCheckDate() + " | " + "반납날짜 :" + checkLists.getReturnDate());
+						}
+						//System.out.println(ldao.checkLists(myId3));
 						System.out.println("");
 						System.out.println("");
 						break;
 					// 내정보조회
-					case 5:
+					case 6:
 						System.out.println("[내정보조회]");
 						System.out.print("1.아이디:");
 						String myId4 = scn.nextLine();
@@ -339,7 +381,7 @@ public class LibraryApp {
 						System.out.println("");
 						break;
 					// 내정보수정
-					case 6:
+					case 7:
 						System.out.println("[내정보수정]");
 						System.out.print("아이디:");
 						String u_id2 = scn.nextLine();
@@ -371,7 +413,7 @@ public class LibraryApp {
 						}
 						break;
 					// 회원탈퇴
-					case 7:
+					case 8:
 						System.out.println("[회원탈퇴]");
 						System.out.print("1.아이디:");
 						String unjoinMemberId = scn.nextLine();
@@ -389,7 +431,7 @@ public class LibraryApp {
 						}
 						break;
 					// 종료
-					case 8:
+					case 9:
 						System.out.println("프로그램을 종료합니다.");
 						return;
 					default:

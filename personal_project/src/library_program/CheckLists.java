@@ -6,9 +6,9 @@ import java.util.Date;
 public class CheckLists {
 	private int checkNo;
 	private String memberId;
-	private String book_name;
-	private Date checkDate;
-	private Date returnDate;
+	private String bookName;
+	private String checkDate;
+	private String returnDate;
 	
 	
 	public int getCheckNo() {
@@ -17,28 +17,28 @@ public class CheckLists {
 	public void setCheckNo(int checkNo) {
 		this.checkNo = checkNo;
 	}
-	public String getMemberNo() {
+	public String getMemberId() {
 		return memberId;
 	}
-	public void setMemberNo(String memberId) {
+	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public String getBook_name() {
-		return book_name;
+	public String getBookName() {
+		return bookName;
 	}
-	public void setBook_name(String book_name) {
-		this.book_name = book_name;
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
 	}
-	public Date getCheckDate() {
+	public String getCheckDate() {
 		return checkDate;
 	}
-	public void setCheckDate(Date checkDate) {
+	public void setCheckDate(String checkDate) {
 		this.checkDate = checkDate;
 	}
-	public Date getReturnDate() {
+	public String getReturnDate() {
 		return returnDate;
 	}
-	public void setReturnDate(Date returnDate) {
+	public void setReturnDate(String returnDate) {
 		this.returnDate = returnDate;
 	}
 }
